@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中国語名前の発音 · クラス出席ボード</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --c1: #EABCDD;   /* pink mauve */
+    --c2: #F0DFEA;   /* blush */
+    --c3: #F7F6F5;   /* near white */
+    --c4: #DDD1E9;   /* lavender */
+    --c5: #A4B5D5;   /* periwinkle */
+
+    --bg:       #F7F6F5;
+    --card:     #FFFFFF;
+    --ink:      #2E2040;    /* deep purple-navy derived from palette */
+    --ink-2:    #6B5D7A;
+    --ink-3:    #A094AE;
+    --border:   #E8E2EF;
+    --radius:   13px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans JP', 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--ink);
+    padding: 1.8rem 2.4rem;
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+  }
+  .header-pill {
+    background: var(--c1);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 5px 14px;
+    border-radius: 99px;
+    flex-shrink: 0;
+    letter-spacing: 0.03em;
+  }
+  header h1 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #FFFFFF;
+    letter-spacing: 0.01em;
+  }
+  header p {
+    margin-left: auto;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.38);
+    font-family: 'DM Sans', sans-serif;
+    white-space: nowrap;
+  }
+
+  /* ── Now playing bar ── */
+  #now-playing {
+    background: var(--card);
+    border-bottom: 2px solid var(--border);
+    padding: 0.9rem 2.4rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 52px;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  #now-playing.active {
+    background: var(--c2);
+    border-bottom-color: var(--c1);
+  }
+
+  .np-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--border);
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+  #now-playing.active .np-dot {
+    background: var(--c1);
+    animation: pop 0.9s ease-in-out infinite alternate;
+  }
+  @keyframes pop {
+    from { transform: scale(1);   opacity: 1; }
+    to   { transform: scale(1.6); opacity: 0.6; }
+  }
+
+  #now-playing-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: var(--ink-3);
+  }
+  #now-playing.active #now-playing-text { color: var(--ink); }
+  #now-playing-text strong { font-weight: 600; color: var(--ink); }
+
+  /* ── Main ── */
+  main {
+    padding: 2rem 2.4rem 4rem;
+    max-width: 1040px;
+    margin: 0 auto;
+  }
+  .meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.67rem;
+    color: var(--ink-3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+
+  /* ── Grid ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+    gap: 9px;
+  }
+
+  /* ── Card ── */
+  .btn-student {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-top: 3px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 15px 13px;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    position: relative;
+    transition: border-color 0.15s, border-top-color 0.15s, background 0.15s, transform 0.12s, box-shadow 0.15s;
+    box-shadow: 0 1px 4px rgba(46,32,64,0.06);
+  }
+
+  /* pastel top stripe cycling through the 5 palette colors */
+  .btn-student:nth-child(5n+1) { --stripe: var(--c1); }
+  .btn-student:nth-child(5n+2) { --stripe: var(--c4); }
+  .btn-student:nth-child(5n+3) { --stripe: var(--c5); }
+  .btn-student:nth-child(5n+4) { --stripe: var(--c1); }
+  .btn-student:nth-child(5n+0) { --stripe: var(--c4); }
+
+  .btn-student { border-top-color: var(--stripe); }
+
+  .btn-student:hover {
+    background: var(--c3);
+    border-color: var(--stripe);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 18px rgba(46,32,64,0.1);
+  }
+  .btn-student:active {
+    transform: translateY(0) scale(0.975);
+    box-shadow: 0 1px 4px rgba(46,32,64,0.06);
+  }
+
+  /* playing */
+  .btn-student.playing {
+    background: var(--c2);
+    border-color: var(--c1);
+    border-top-color: var(--c1);
+    box-shadow: 0 5px 20px rgba(234,188,221,0.45);
+    transform: translateY(-2px);
+  }
+
+  /* played but finished */
+  .btn-student.played:not(.playing) {
+    background: #FDFCFE;
+    border-top-color: var(--c4);
+  }
+
+  .btn-student.no-audio {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+  .btn-student.no-audio:hover {
+    transform: none;
+    background: var(--card);
+    border-color: var(--border);
+    border-top-color: var(--stripe);
+    box-shadow: 0 1px 4px rgba(46,32,64,0.06);
+  }
+
+  .seat-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.64rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+    transition: color 0.15s;
+  }
+  .btn-student:hover .seat-num   { color: var(--ink-2); }
+  .btn-student.playing .seat-num { color: var(--ink-2); }
+  .btn-student.played:not(.playing) .seat-num { color: var(--c5); }
+
+  .student-name {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+  }
+  .btn-student.playing .student-name { font-weight: 600; }
+
+  .pinyin {
+    font-family: 'DM Sans', 'Noto Sans SC', sans-serif;
+    font-size: 0.7rem;
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+  }
+
+  /* play hint icon */
+  .play-hint {
+    position: absolute;
+    right: 11px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.66rem;
+    color: var(--ink-3);
+    opacity: 0;
+    transition: opacity 0.14s;
+    font-family: 'DM Mono', monospace;
+  }
+  .btn-student:not(.no-audio):hover .play-hint        { opacity: 0.7; }
+  .btn-student.playing .play-hint                     { opacity: 1; color: var(--c1); }
+  .btn-student.played:not(.playing) .play-hint        { opacity: 0.5; }
+
+  /* ── Footer ── */
+  footer {
+    padding: 1.2rem 2.4rem;
+    font-size: 0.72rem;
+    color: var(--ink-3);
+    border-top: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.03em;
+  }
+
+  @media (max-width: 520px) {
+    header { padding: 1.2rem; flex-wrap: wrap; }
+    header p { margin-left: 0; width: 100%; }
+    main { padding: 1.4rem 1.2rem 3rem; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-pill">発音</div>
+  <h1>中国語名前の発音練習</h1>
+  <p>カードをクリックして発音を聞こう</p>
+</header>
+
+<div id="now-playing">
+  <div class="np-dot"></div>
+  <div id="now-playing-text">生徒カードをクリックして発音を再生してください</div>
+</div>
+
+<main>
+  <p class="meta">クラス全員 &nbsp;·&nbsp; 37名 &nbsp;·&nbsp; 座席番号 1501 – 1537</p>
+  <div class="grid" id="student-grid"></div>
+</main>
+
+<footer>音声ファイルは audio/ フォルダに配置 &nbsp;·&nbsp; ファイル名例：1501.mp3</footer>
+
+<audio id="player"></audio>
+
+<script>
+// ══════════════════════════════════════════════
+//  生徒名簿 — 各生徒の氏名とピンインを入力してください
+//  形式：{ seat: 座席番号, name: "氏名", pinyin: "Pīnyīn" }
+//  ピンインは省略可：pinyin: ""
+// ══════════════════════════════════════════════
+const students = [
+  { seat: 1501, name: "（未定）", pinyin: "" },
+  { seat: 1502, name: "（未定）", pinyin: "" },
+  { seat: 1503, name: "（未定）", pinyin: "" },
+  { seat: 1504, name: "（未定）", pinyin: "" },
+  { seat: 1505, name: "（未定）", pinyin: "" },
+  { seat: 1506, name: "（未定）", pinyin: "" },
+  { seat: 1507, name: "（未定）", pinyin: "" },
+  { seat: 1508, name: "（未定）", pinyin: "" },
+  { seat: 1509, name: "（未定）", pinyin: "" },
+  { seat: 1510, name: "（未定）", pinyin: "" },
+  { seat: 1511, name: "（未定）", pinyin: "" },
+  { seat: 1512, name: "（未定）", pinyin: "" },
+  { seat: 1513, name: "（未定）", pinyin: "" },
+  { seat: 1514, name: "（未定）", pinyin: "" },
+  { seat: 1515, name: "（未定）", pinyin: "" },
+  { seat: 1516, name: "（未定）", pinyin: "" },
+  { seat: 1517, name: "（未定）", pinyin: "" },
+  { seat: 1518, name: "（未定）", pinyin: "" },
+  { seat: 1519, name: "（未定）", pinyin: "" },
+  { seat: 1520, name: "（未定）", pinyin: "" },
+  { seat: 1521, name: "（未定）", pinyin: "" },
+  { seat: 1522, name: "（未定）", pinyin: "" },
+  { seat: 1523, name: "（未定）", pinyin: "" },
+  { seat: 1524, name: "（未定）", pinyin: "" },
+  { seat: 1525, name: "（未定）", pinyin: "" },
+  { seat: 1526, name: "（未定）", pinyin: "" },
+  { seat: 1527, name: "（未定）", pinyin: "" },
+  { seat: 1528, name: "（未定）", pinyin: "" },
+  { seat: 1529, name: "（未定）", pinyin: "" },
+  { seat: 1530, name: "（未定）", pinyin: "" },
+  { seat: 1531, name: "（未定）", pinyin: "" },
+  { seat: 1532, name: "（未定）", pinyin: "" },
+  { seat: 1533, name: "（未定）", pinyin: "" },
+  { seat: 1534, name: "（未定）", pinyin: "" },
+  { seat: 1535, name: "（未定）", pinyin: "" },
+  { seat: 1536, name: "（未定）", pinyin: "" },
+  { seat: 1537, name: "（未定）", pinyin: "" },
+];
+
+function audioPath(seat) { return `audio/${seat}.mp3`; }
+
+const grid    = document.getElementById('student-grid');
+const player  = document.getElementById('player');
+const nowBar  = document.getElementById('now-playing');
+const nowText = document.getElementById('now-playing-text');
+let activeBtn = null;
+
+students.forEach(s => {
+  const btn = document.createElement('button');
+  btn.className = 'btn-student';
+  btn.dataset.seat = s.seat;
+  btn.innerHTML = `
+    <span class="seat-num">${s.seat}</span>
+    <span class="student-name">${s.name}</span>
+    ${s.pinyin ? `<span class="pinyin">${s.pinyin}</span>` : ''}
+    <span class="play-hint">▶</span>
+  `;
+  btn.addEventListener('click', () => play(s, btn));
+  grid.appendChild(btn);
+});
+
+function play(student, btn) {
+  if (btn.classList.contains('no-audio')) return;
+
+  if (activeBtn && activeBtn !== btn) {
+    activeBtn.classList.remove('playing');
+    activeBtn.querySelector('.play-hint').textContent = '↺';
+  }
+
+  activeBtn = btn;
+  btn.classList.add('playing', 'played');
+  btn.querySelector('.play-hint').textContent = '♪';
+
+  player.pause();
+  player.currentTime = 0;
+  player.src = audioPath(student.seat);
+  player.play().catch(() => {
+    btn.classList.remove('playing');
+    btn.classList.add('no-audio');
+    btn.title = '音声ファイルが見つかりません';
+    resetBar(); activeBtn = null;
+  });
+
+  nowBar.classList.add('active');
+  nowText.innerHTML = `<strong>${student.seat} · ${student.name}</strong>${student.pinyin ? '&ensp;' + student.pinyin : ''}&ensp;を再生中`;
+}
+
+player.addEventListener('ended', () => {
+  if (activeBtn) {
+    activeBtn.classList.remove('playing');
+    activeBtn.querySelector('.play-hint').textContent = '↺';
+  }
+  activeBtn = null;
+  resetBar();
+});
+
+function resetBar() {
+  nowBar.classList.remove('active');
+  nowText.textContent = '生徒カードをクリックして発音を再生してください';
+}
+</script>
+</body>
+</html>
